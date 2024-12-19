@@ -154,7 +154,6 @@ const Index = () => {
                 <Link
                   className="btn btn-light bg-white d-flex"
                   to="/registrasi"
-                  target="_black"
                 >
                   <svg
                     width="22"
