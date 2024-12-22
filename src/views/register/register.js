@@ -1,33 +1,40 @@
-import React, { useState } from "react";
-import { Row, Col, Image, Form, Button, ListGroup } from "react-bootstrap";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Row, Col, Form, Button } from "react-bootstrap";
+import { FaSearch } from "react-icons/fa";
+// import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Card from "../../../src/components/Card.js";
+import { useNavigate } from "react-router-dom";
+import ModalUPT from "./modals/ModalUPT.js";
 
 const Register = () => {
-  // perusahaan
-  const [JENIS_USAHA, setJENIS_USAHA] = useState("");
-  const [NOMOR_KUSUKA, setNOMOR_KUSUKA] = useState("");
-  const [NAMA, setNAMA] = useState("");
-  const [NPWP, setNPWP] = useState("");
-  const [NO_IZIN, setNO_IZIN] = useState("");
-  const [ALAMAT, setALAMAT] = useState("");
-  const [PROPINSI, setPROPINSI] = useState("");
-  const [KOTA, setKOTA] = useState("");
-  const [KODEPOS, setKODEPOS] = useState("");
-  const [TELEPON, setTELEPON] = useState("");
-  const [EMAIL, setEMAIL] = useState("");
-  const [EMAIL_PNBP, setEMAIL_PNBP] = useState("");
-  const [KETERANGAN, setKETERANGAN] = useState("");
-  const [TGL_DAFTAR, setTGL_DAFTAR] = useState("2024/12/17");
-  const [FILE_ID, setFILE_ID] = useState("");
-  const [STATUS, setSTATUS] = useState("");
-  const [LAST_UPDATED, setLAST_UPDATED] = useState("2024/12/17");
-  const navigate = useNavigate();
+  //   const [maxTrader, setMaxTrader] = useState(0);
+
+  // trader
+  const [trader, setTrader] = useState({
+    JENIS_USAHA: "",
+    NOMOR_KUSUKA: "",
+    NAMA: "",
+    NPWP: "",
+    NO_IZIN: "",
+    ALAMAT: "",
+    PROPINSI: "",
+    KOTA: "",
+    KODEPOS: "",
+    TELEPON: "",
+    EMAIL: "",
+    EMAIL_PNBP: "",
+    KETERANGAN: "",
+    TGL_DAFTAR: "2024/12/17",
+    FILE_ID: "",
+    STATUS: "",
+    LAST_UPDATED: "2024/12/17",
+  });
+
   // user
   const [user, setUser] = useState({
     ROLE: "8",
-    KODE_TRADER: 2205,
+    KODE_TRADER: 0,
     USERNAME: "",
     PASSWORD: "",
     JNS_ID: "1",
@@ -49,104 +56,78 @@ const Register = () => {
     USER_UPDATED: 1,
   });
 
+  const [propinsi, setPropinsi] = useState([]);
+  const [kota, setKota] = useState([]);
+  const [showUPT, setShowUPT] = useState(false);
+  const handleCloseUPT = () => setShowUPT(false);
+  const handleShowUPT = () => setShowUPT(true);
+  const [rowData, setRowData] = useState(null);
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    getMaxTrader();
+    getPropinsi();
+  }, []);
+
   const saveTrader = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:5001/register", {
-        JENIS_USAHA,
-        NOMOR_KUSUKA,
-        NAMA,
-        NPWP,
-        NO_IZIN,
-        ALAMAT,
-        PROPINSI,
-        KOTA,
-        KODEPOS,
-        TELEPON,
-        EMAIL,
-        EMAIL_PNBP,
-        KETERANGAN,
-        TGL_DAFTAR,
-        FILE_ID,
-        STATUS,
-        LAST_UPDATED,
-      });
-      await axios.post("http://localhost:5001/user", user);
-         // user.ROLE,
-         // user.KODE_TRADER,
-         // user.USERNAME, 
-         // user.PASSWORD, 
-         // user.JNS_ID,   
-         // user.NO_ID,          
-         // user.NAMA,
-         // user.ALAMAT, 
-         // user.EMAIL, 
-         // user.TELEPON, 
-         // user.JABATAN, 
-         // user.KD_UNIT, 
-         // user.STATUS, 
-         // user.STS_LOGIN, 
-         // user.DATE_LOGIN, 
-         // user.IP_LOGIN, 
-         // user.LAST_LOGIN, 
-         // user.DATE_CREATED, 
-         // user.USER_CREATED, 
-         // user.LAST_UPDATED, 
-         // user.USER_UPDATED,
-      //   user: {
-      //     ROLE: user.ROLE,
-      //     KODE_TRADER: user.KODE_TRADER,
-      //     USERNAME: user.USERNAME,
-      //     PASSWORD: user.PASSWORD,
-      //     JNS_ID: user.JNS_ID,
-      //     NO_ID: user.NO_ID,
-      //     NAMA: user.NAMA,
-      //     ALAMAT: user.ALAMAT,
-      //     EMAIL: user.EMAIL,
-      //     TELEPON: user.TELEPON,
-      //     JABATAN: user.JABATAN,
-      //     KD_UNIT: user.KD_UNIT,
-      //     STATUS: user.STATUS,
-      //     STS_LOGIN: user.STS_LOGIN,
-      //     DATE_LOGIN: user.DATE_LOGIN,
-      //     IP_LOGIN: user.IP_LOGIN,
-      //     LAST_LOGIN: user.LAST_LOGIN,
-      //     DATE_CREATED: user.DATE_CREATED,
-      //     USER_CREATED: user.USER_CREATED,
-      //     LAST_UPDATED: user.LAST_UPDATED,
-      //     USER_UPDATED: user.USER_UPDATED,
-      //   },
-        //     ROLE,},
-        //   uKODE_TRADER,
-        //   uUSERNAME,
-        //   uPASSWORD,
-        //   uJNS_ID,
-        //   uNO_ID,
-        //   uNAMA,
-        //   uALAMAT,
-        //   uEMAIL,
-        //   uTELEPON,
-        //   uJABATAN,
-        //   uKD_UNIT,
-        //   uSTATUS,
-        //   uSTS_LOGIN,
-        //   uDATE_LOGIN,
-        //   uIP_LOGIN,
-        //   uLAST_LOGIN,
-        //   uDATE_CREATED,
-        //   uUSER_CREATED,
-        //   uLAST_UPDATED,
-        //   uUSER_UPDATED,
-      // });
-      // navigate("/registrasi");
+      await axios.post("http://localhost:5001/register/register", trader);
+      await axios.post("http://localhost:5001/register/user", user);
+      navigate("/");
     } catch (error) {
       console.log(error);
     }
   };
 
+  const getMaxTrader = async () => {
+    try {
+      setUser({ ...user, KODE_TRADER: 0 });
+      const response = await axios.get(
+        "http://localhost:5001/register/register-max"
+      );
+      setUser({ ...user, KODE_TRADER: Object.values(response.data)[0] + 1 });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getPropinsi = async () => {
+    try {
+      setUser({ ...user, KODE_TRADER: 0 });
+      const response = await axios.get(
+        "http://localhost:5001/register/propinsi"
+      );
+      setPropinsi(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const propinsiChange = async (e) => {
+    try {
+      const response = await axios.get(
+        "http://localhost:5001/register/kota/" + e.target.value
+      );
+      setKota(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const routeChange = () => {
+    navigate("/");
+  };
+
+  const handleClickUPT = () => {
+    // setRowData(rowdata)
+    setShowUPT(true);
+  };
+
   return (
     <>
-      <section className="login-content">
+      <section className="register-content">
         <Row className="m-0 align-items-center bg-white vh-100">
           <Col md="12">
             <Row className="justify-content-center">
@@ -170,8 +151,13 @@ const Register = () => {
                         <Col sm="9">
                           <select
                             className="form-select mb-3 shadow-none"
-                            value={JENIS_USAHA}
-                            onChange={(e) => setJENIS_USAHA(e.target.value)}
+                            value={trader.JENIS_USAHA}
+                            onChange={(e) =>
+                              setTrader({
+                                ...trader,
+                                JENIS_USAHA: e.target.value,
+                              })
+                            }
                           >
                             <option defaultValue>Pilih Jenis Usaha</option>
                             <option value="1">Ekspor</option>
@@ -192,8 +178,10 @@ const Register = () => {
                           <Form.Control
                             type="Text"
                             placeholder="Nama Perusahaan"
-                            value={NAMA}
-                            onChange={(e) => setNAMA(e.target.value)}
+                            value={trader.NAMA}
+                            onChange={(e) =>
+                              setTrader({ ...trader, NAMA: e.target.value })
+                            }
                           />
                         </Col>
                       </Form.Group>
@@ -211,12 +199,14 @@ const Register = () => {
                             <Col>
                               <Form.Control
                                 type="text"
-                                placeholder="NPWP 15 Digit"
-                                value={NPWP}
-                                onChange={(e) => setNPWP(e.target.value)}
+                                placeholder="NPWP 16 Digit"
+                                value={trader.NPWP}
+                                onChange={(e) =>
+                                  setTrader({ ...trader, NPWP: e.target.value })
+                                }
                               />
                             </Col>
-                            <Col>
+                            {/* <Col>
                               <Form.Control
                                 type="text"
                                 placeholder="NPWP 16 Digit"
@@ -224,7 +214,7 @@ const Register = () => {
                             </Col>
                             <Col>
                               <Form.Control type="file" id="customFile" />
-                            </Col>
+                            </Col> */}
                           </Row>
                         </Col>
                       </Form.Group>
@@ -303,9 +293,9 @@ const Register = () => {
                                 }
                               />
                             </Col>
-                            <Col>
+                            {/* <Col>
                               <Form.Control type="file" id="idFile" />
-                            </Col>
+                            </Col> */}
                           </Row>
                         </Col>
                       </Form.Group>
@@ -332,8 +322,10 @@ const Register = () => {
                           <Form.Control
                             type="Text"
                             placeholder="Nomor izin usaha"
-                            value={NO_IZIN}
-                            onChange={(e) => setNO_IZIN(e.target.value)}
+                            value={trader.NO_IZIN}
+                            onChange={(e) =>
+                              setTrader({ ...trader, NO_IZIN: e.target.value })
+                            }
                           />
                         </Col>
                       </Form.Group>
@@ -576,8 +568,10 @@ const Register = () => {
                             id="exampleFormControlTextarea1"
                             rows="5"
                             placeholder="Alamat Kantor"
-                            value={ALAMAT}
-                            onChange={(e) => setALAMAT(e.target.value)}
+                            value={trader.ALAMAT}
+                            onChange={(e) =>
+                              setTrader({ ...trader, ALAMAT: e.target.value })
+                            }
                           />
                         </Col>
                       </Form.Group>
@@ -591,11 +585,23 @@ const Register = () => {
                           Propinsi*
                         </Form.Label>
                         <Col sm="9">
-                          <select className="form-select mb-3 shadow-none">
-                            <option defaultValue>Pilih Propinsi</option>
-                            <option value="11">ACEH</option>
-                            <option value="51">BALI</option>
-                            <option value="36">BANTEN</option>
+                          <select
+                            className="form-select mb-3 shadow-none"
+                            value={trader.PROPINSI}
+                            onChange={(e) => {
+                              setTrader({
+                                ...trader,
+                                PROPINSI: e.target.value,
+                              });
+                              propinsiChange(e);
+                            }}
+                          >
+                            <option defaultValue>Pilih Kabupaten/Kota</option>
+                            {propinsi.map((item) => (
+                              <option value={item.KODE_PROPINSI}>
+                                {item.URAIAN_PROPINSI}
+                              </option>
+                            ))}
                           </select>
                         </Col>
                       </Form.Group>
@@ -609,15 +615,26 @@ const Register = () => {
                           Kabupaten / Kota*
                         </Form.Label>
                         <Col sm="9">
-                          <select className="form-select mb-3 shadow-none">
+                          <select
+                            className="form-select mb-3 shadow-none"
+                            value={trader.KOTA}
+                            onChange={(e) =>
+                              setTrader({ ...trader, KOTA: e.target.value })
+                            }
+                          >
                             <option defaultValue>Pilih Kabupaten/Kota</option>
-                            <option value="1101">KAB. SIMEULUE</option>
+                            {kota.map((item) => (
+                              <option value={item.KODE_KOTA}>
+                                {item.URAIAN_KOTA}
+                              </option>
+                            ))}
+                            {/* <option value="1101">KAB. SIMEULUE</option>
                             <option value="1102">KAB. ACEH SINGKIL</option>
-                            <option value="1103">KAB. ACEH SELATAN</option>
+                            <option value="1103">KAB. ACEH SELATAN</option> */}
                           </select>
                         </Col>
                       </Form.Group>
-                      <Form.Group as={Row} className="form-group">
+                      {/* <Form.Group as={Row} className="form-group">
                         <Form.Label
                           column
                           sm="3"
@@ -634,7 +651,7 @@ const Register = () => {
                             <option value="1101021">TEUPAH BARAT</option>
                           </select>
                         </Col>
-                      </Form.Group>
+                      </Form.Group> */}
                       <Form.Group as={Row} className="form-group">
                         <Form.Label
                           column
@@ -648,8 +665,10 @@ const Register = () => {
                           <Form.Control
                             type="Text"
                             placeholder="Kode Pos"
-                            value={KODEPOS}
-                            onChange={(e) => setKODEPOS(e.target.value)}
+                            value={trader.KODEPOS}
+                            onChange={(e) =>
+                              setTrader({ ...trader, KODEPOS: e.target.value })
+                            }
                           />
                         </Col>
                       </Form.Group>
@@ -666,8 +685,10 @@ const Register = () => {
                           <Form.Control
                             type="Text"
                             placeholder="Telepon Kantor"
-                            value={TELEPON}
-                            onChange={(e) => setTELEPON(e.target.value)}
+                            value={trader.TELEPON}
+                            onChange={(e) =>
+                              setTrader({ ...trader, TELEPON: e.target.value })
+                            }
                           />
                         </Col>
                       </Form.Group>
@@ -684,8 +705,10 @@ const Register = () => {
                           <Form.Control
                             type="Text"
                             placeholder="Email Kantor"
-                            value={EMAIL}
-                            onChange={(e) => setEMAIL(e.target.value)}
+                            value={trader.EMAIL}
+                            onChange={(e) =>
+                              setTrader({ ...trader, EMAIL: e.target.value })
+                            }
                           />
                         </Col>
                       </Form.Group>
@@ -704,8 +727,13 @@ const Register = () => {
                             id="exampleFormControlTextarea1"
                             rows="5"
                             placeholder="Keterangan"
-                            value={KETERANGAN}
-                            onChange={(e) => setKETERANGAN(e.target.value)}
+                            value={trader.KETERANGAN}
+                            onChange={(e) =>
+                              setTrader({
+                                ...trader,
+                                KETERANGAN: e.target.value,
+                              })
+                            }
                           />
                         </Col>
                       </Form.Group>
@@ -730,7 +758,39 @@ const Register = () => {
                           UPT*
                         </Form.Label>
                         <Col sm="9">
-                          <Form.Control type="Text" placeholder="UPT" />
+                          {/* <select
+                            className="form-select mb-3 shadow-none"
+                            value={trader.PROPINSI}
+                            onChange={(e) => {
+                              setTrader({
+                                ...trader,
+                                PROPINSI: e.target.value,
+                              });
+                              propinsiChange(e);
+                            }}
+                          >
+                            <option defaultValue>Pilih Kabupaten/Kota</option>
+                            {propinsi.map((item) => (
+                              <option value={item.KODE_PROPINSI}>
+                                {item.URAIAN_PROPINSI}
+                              </option>
+                            ))}
+                          </select> */}
+                          <Row>
+                            <Col sm="8">
+                              <Form.Control type="Text" placeholder="UPT" />
+                            </Col>
+                            <Col sm="1" className="align-self-center">
+                              <Button
+                                size="sm"
+                                variant="primary"
+                                onClick={() => handleClickUPT()}
+                              >
+                                <FaSearch />
+                                {/* Pilih UPT */}
+                              </Button>
+                            </Col>
+                          </Row>
                         </Col>
                       </Form.Group>
 
@@ -754,14 +814,25 @@ const Register = () => {
                           User ID*
                         </Form.Label>
                         <Col sm="9">
-                          <Form.Control type="Text" placeholder="User Id" />
+                        <Form.Control
+                            type="Text"
+                            placeholder="User Name"
+                            value={user.USERNAME}
+                            onChange={(e) =>
+                              setUser({ ...user, USERNAME: e.target.value })
+                            }
+                          />
                         </Col>
                       </Form.Group>
                       <div className="text-center mt-5">
                         <Button type="submit" variant="btn btn-primary">
                           Submit
                         </Button>{" "}
-                        <Button type="button" variant="btn btn-danger">
+                        <Button
+                          type="button"
+                          variant="btn btn-danger"
+                          onClick={routeChange}
+                        >
                           Cancel
                         </Button>
                       </div>
@@ -823,6 +894,12 @@ const Register = () => {
                   <Image src={auth1} className="Image-fluid gradient-main animated-scaleX" alt="images" />
                </Col> */}
         </Row>
+        <ModalUPT
+          showUPT={showUPT}
+          handleCloseUPT={handleCloseUPT}
+          //  rowData={rowData}
+          //  reloadList={getListOssHeader}
+        />
       </section>
     </>
   );
